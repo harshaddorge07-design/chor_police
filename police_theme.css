@@ -1,0 +1,106 @@
+/* Police night-city background
+   Works on a plain page (<body class="police-bg">) and on Streamlit (.stApp) */
+
+:root {
+  --night-top: #0b1530;
+  --night-bottom: #14224a;
+  --siren-red: #e5222b;
+  --siren-blue: #1e6bff;
+  --badge-gold: #e0b341;
+  --tape-yellow: #f5c400;
+  --ink: #eaf0ff;
+}
+
+/* Base: sky gradient + gold badge outline + city skyline */
+.police-bg,
+.stApp {
+  color: var(--ink);
+  background-color: var(--night-top);
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 61,38 96,38 68,59 79,92 50,72 21,92 32,59 4,38 39,38' fill='none' stroke='%23e0b341' stroke-width='2' stroke-linejoin='round'/><circle cx='50' cy='50' r='46' fill='none' stroke='%23e0b341' stroke-width='1'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'><path fill='%23060c1f' d='M0 200V120h60V80h50v60h40V100h70V60h60v90h50V90h60v40h70V70h50v80h60v-40h80V50h60v100h50v-50h70v40h60V90h60v70h50v-40h60v80Z'/></svg>"),
+    linear-gradient(180deg, var(--night-top) 0%, var(--night-bottom) 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: center 48px, bottom center, center;
+  background-size: 220px 220px, 100% 200px, 100% 100%;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Two siren glows that take turns */
+.police-bg::before,
+.police-bg::after,
+.stApp::before,
+.stApp::after {
+  content: "";
+  position: fixed;
+  top: -20vh;
+  width: 70vw;
+  height: 90vh;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+.police-bg::before,
+.stApp::before {
+  left: -25vw;
+  background: radial-gradient(closest-side, rgba(229, 34, 43, 0.55), transparent 70%);
+  animation: siren-red 1.4s ease-in-out infinite;
+}
+
+.police-bg::after,
+.stApp::after {
+  right: -25vw;
+  background: radial-gradient(closest-side, rgba(30, 107, 255, 0.55), transparent 70%);
+  animation: siren-blue 1.4s ease-in-out infinite;
+}
+
+@keyframes siren-red {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0.05; }
+}
+
+@keyframes siren-blue {
+  0%, 100% { opacity: 0.05; }
+  50%      { opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .police-bg::before,
+  .police-bg::after,
+  .stApp::before,
+  .stApp::after {
+    animation: none;
+    opacity: 0.35;
+  }
+}
+
+/* Keep real content above the glows (Streamlit containers) */
+[data-testid="stAppViewContainer"],
+[data-testid="stHeader"],
+.screen {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+/* Light text for Streamlit widgets */
+.stApp h1, .stApp h2, .stApp h3, .stApp p, .stApp label, .stApp span {
+  color: var(--ink);
+}
+
+/* Optional: police tape banner  ->  <div class="police-tape">POLICE LINE DO NOT CROSS</div> */
+.police-tape {
+  background: var(--tape-yellow);
+  color: #111;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, #111 0 12px, var(--tape-yellow) 12px 24px) 6;
+  transform: rotate(-1.5deg);
+}
