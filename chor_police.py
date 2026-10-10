@@ -49,8 +49,6 @@ ROLES = {
     "Soldier": {"icon": "💂", "color": "#16a34a", "tip": "You earn 500 points this round, no matter what."},
 }
 
-st.set_page_config(page_title="Police • Thief • Soldier", page_icon="🕵️")
-
 
 # ─────────────────────── Shared server-side state ───────────────────────
 # Every phone is a separate Streamlit session, so the game lives in a
